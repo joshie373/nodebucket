@@ -1,1 +1,27 @@
-<p>auth-layout works!</p>
+<!--
+; ============================================
+; Title: auth-layout.html
+; Date: 09 March 2020
+; Modified By: Joshua Hughes
+; Description: Auth layout component for nodebucket
+;=============================================
+ -->
+
+   <div fxLayout="column" fxLayoutAlign="center center">
+    <h1>Employee Login</h1><br>
+    <mat-card class="btn-rounded">
+      <form [formGroup]="empForm">
+        <mat-form-field >
+          <input formControlName="empId" [(ngModel)]="EmployeeId" matInput placeholder="Employee Id">
+        </mat-form-field>
+        <div style="color:red" *ngIf="LoginClicked && myForm.empId.errors?.required">
+          Employee Id is required.
+        </div>
+      </form>
+     </mat-card><br>
+     <!-- <h3 *ngIf="LoginError" style="color: red">{{LoginError}}</h3> -->
+     <button mat-raised-button color="accent" class="black-outline btn-rounded" (click)="Login()">Login</button>
+  </div>
+
+
+

@@ -14,6 +14,12 @@ import {FlexLayoutModule} from '@angular/flex-layout';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
+import {MatCardModule} from '@angular/material/card';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material';
+import {LoginGuard} from "./shared/guards/login.guard";
+import {CookieService} from "ngx-cookie-service";
+
 
 @NgModule({
   declarations: [
@@ -33,8 +39,10 @@ import {MatIconModule} from '@angular/material/icon';
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
-  ],
-  providers: [],
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule  ],
+  providers: [CookieService, LoginGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

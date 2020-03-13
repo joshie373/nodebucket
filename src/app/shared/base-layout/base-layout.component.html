@@ -1,15 +1,33 @@
+<!--
+; ============================================
+; Title: base-layout.component.html
+; Date: 09 March 2020
+; Modified By: Joshua Hughes
+; Description: Base root layout page for nodebucket
+;=============================================
+ -->
 <div fxLayout="column">
 
   <!-- navigation -->
   <nav fxFlex>
-    <mat-toolbar>
+    <mat-toolbar color="primary" fxLayout="row">
       <!-- navbar container -->
-      <div class="navbar-container">
+      <div fxFlex="30" class="navbar-container">
         <!-- logo -->
-        <button class="logo" routerLink="/" mat-button>nodebucket</button>
+        <button class="logo black-outline" routerLink="/" mat-button>nodebucket</button>
 
-        <button class="navbar-link" routerLink="/" mat-button>Home</button>
-        <button class="navbar-link" mat-button>About</button>
+        <button class="navbar-link  black-outline" routerLink="/" mat-button>Home</button>
+        <button class="navbar-link  black-outline" mat-button>About</button>
+
+      </div>
+      <div fxFlex="52"></div>
+      <div fxFlex>
+        <span  class="mat-h4">Hello </span><br>
+        <span class="mat-h5">Role: </span>
+      </div>
+      <div fxFlex>
+        <!-- need to figure out how to read change of cookie -->
+          <button *ngIf="!LoggedIn"  mat-raised-button color="accent" class="black-outline btn-rounded" [routerLink]="['/login']">Login</button>
       </div>
 
     </mat-toolbar>
@@ -18,7 +36,7 @@
   <!-- main content -->
   <div fxFlex>
     <main class="main-content" fxFlex="100%;">
-      <router-outlet></router-outlet>
+      <router-outlet ></router-outlet>
     </main>
   </div>
 

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
+import {CookieService} from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-base-layout',
@@ -8,11 +9,13 @@ import { Component, OnInit } from '@angular/core';
 export class BaseLayoutComponent implements OnInit {
   year: number = Date.now();
 
-  constructor() {
 
+  constructor(private cookie: CookieService) {
   }
 
+
   ngOnInit() {
+
   }
 
 }

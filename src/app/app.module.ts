@@ -19,6 +19,10 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material';
 import {LoginGuard} from "./shared/guards/login.guard";
 import {CookieService} from "ngx-cookie-service";
+import { NodebucketComponent } from './pages/nodebucket/nodebucket.component';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 
 @NgModule({
@@ -26,7 +30,8 @@ import {CookieService} from "ngx-cookie-service";
     AppComponent,
     BaseLayoutComponent,
     AuthLayoutComponent,
-    HomeComponent
+    HomeComponent,
+    NodebucketComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +46,11 @@ import {CookieService} from "ngx-cookie-service";
     MatIconModule,
     MatCardModule,
     MatFormFieldModule,
-    MatInputModule  ],
+    MatInputModule,
+    DragDropModule,
+    BrowserModule,
+    ModalModule.forRoot()
+  ],
   providers: [CookieService, LoginGuard],
   bootstrap: [AppComponent]
 })

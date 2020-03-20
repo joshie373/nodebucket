@@ -7,7 +7,8 @@
 ;=============================================
  -->
 
-   <div fxLayout="column" fxLayoutAlign="center center">
+<!-- Shows only if user is not logged in -->
+   <div fxLayout="column" fxLayoutAlign="center center" *ngIf="!LoggedIn">
     <h1>Employee Login</h1><br>
     <mat-card class="btn-rounded">
       <form [formGroup]="empForm">
@@ -17,10 +18,21 @@
         <div style="color:red" *ngIf="LoginClicked && myForm.empId.errors?.required">
           Employee Id is required.
         </div>
+        <div style="color:red" *ngIf="LoginClicked && LoginError">
+          {{LoginError}}
+        </div>
       </form>
      </mat-card><br>
-     <!-- <h3 *ngIf="LoginError" style="color: red">{{LoginError}}</h3> -->
      <button mat-raised-button color="accent" class="black-outline btn-rounded" (click)="Login()">Login</button>
+  </div>
+
+  <!-- Shows only if user is logged in -->
+  <div fxLayout="column" fxLayoutAlign="center center" *ngIf="LoggedIn">
+    <h1>Employee Information</h1><br>
+    <mat-card class="btn-rounded">
+      <h3>Currently logged in as <span style="color:#0000cc;">{{LoginName}}</span></h3>
+     </mat-card><br>
+     <button mat-raised-button color="warn" class="black-outline btn-rounded" (click)="Logout()">Logout</button>
   </div>
 
 

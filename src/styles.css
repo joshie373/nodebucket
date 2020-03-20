@@ -1,15 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;  min-height: 100vh; }
 
 
 /* ----------custom theme styles------------ */
 /**
 * Generated theme by Material Theme Generator
-* https://materialtheme.arcsine.dev
 */
 @import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500");
+
+
 .mat-badge-content {
   font-weight: 600;
   font-size: 12px; }
@@ -1949,3 +1948,8 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
   border-radius: 20px !important;
   padding: 0 25px 0 25px !important;
 }
+
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;  min-height: 100vh; }

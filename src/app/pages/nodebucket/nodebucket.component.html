@@ -1,0 +1,108 @@
+<!--
+; ============================================
+; Title: nodebucket.component.html
+; Date: 16 March 2020
+; Modified By: Joshua Hughes
+; Description: Nodebucket component for nodebucket project
+;=============================================
+ -->
+
+ <!-- User div -->
+<div *ngIf="isUser" fxLayout="column">
+  <div fxFlex>
+    <div style="text-align: center;"><br>
+      <button mat-raised-button color="accent" class="black-outline btn-rounded" (click)="openModal(template)">New Task</button>
+    </div>
+  </div>
+  <div cdkDropListGroup fxLayout="row">
+
+    <!-- spacer div -->
+    <div fxFlex="4"></div>
+
+    <!-- Todo container -->
+    <div fxFlex >
+      <h2 style="text-align: center; background-color:#ebe8e8da;">To do</h2>
+      <div
+        cdkDropList
+        [cdkDropListData]="todo"
+        class=" mat-elevation-z8"
+        (cdkDropListDropped)="drop($event)">
+        <div class="example-box" *ngFor="let item of todo" cdkDrag>
+          {{item.text}}
+          <button type="button" class="task-close" aria-label="Close" (click)="delete(item._id)">
+            <span aria-hidden="true" ><b>X</b></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- spacer div -->
+    <div fxFlex="8"></div>
+
+   <!-- Done Container -->
+   <div fxFlex >
+    <h2 style="text-align: center; background-color:#ebe8e8da;">Done</h2>
+    <div
+      cdkDropList
+      [cdkDropListData]="done"
+      class="example-list mat-elevation-z8"
+      (cdkDropListDropped)="drop($event)">
+      <div class="example-box" *ngFor="let item of done" cdkDrag>
+        {{item.text}}
+        <button type="button" class="task-close" aria-label="Close" (click)="delete(item._id)">
+          <span aria-hidden="true" ><b>X</b></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+     <!-- spacer div -->
+    <!-- <div fxFlex="8"></div> -->
+
+
+
+     <!-- spacer div -->
+     <div fxFlex="6"></div>
+
+
+
+  </div>
+
+</div>
+
+<!-- modal template -->
+<ng-template #template>
+  <div class="modal-header">
+
+    <!-- Modal Title -->
+    <h4 class="modal-title pull-left">New Task</h4>
+
+    <!-- Close Button -->
+    <button type="button"
+            class="close pull-right"
+            (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <!-- Modal Body -->
+  <div class="modal-body">
+    <form [formGroup]="newTaskForm">
+      <textarea formControlName="newTaskInput" style="width:100%" [(ngModel)]="newTaskText" matInput placeholder="enter task text"></textarea>
+      <br><br>
+      <button  mat-raised-button color="accent" class="black-outline btn-rounded" (click)="newTask()">Add Task</button>
+      <button  mat-raised-button class="btn-rounded" (click)="modalRef.hide(); newTaskForm.reset()">Cancel</button>
+  </form>
+  </div>
+
+  <!-- <div class="modal-body" *ngIf="editTaskClicked">
+    <form [formGroup]="taskForm">
+      <textarea formControlName="taskTextInput" style="width:100%" [(ngModel)]="TaskInputText" matInput placeholder="enter task text"></textarea>
+      <br>
+      <button  mat-raised-button color="accent" class="black-outline btn-rounded" (click)="newTask()">Add Task</button>
+      <button  mat-raised-button class="btn-rounded" (click)="modalRef.hide(); taskForm.reset()">Cancel</button>
+  </form>
+  </div> -->
+
+</ng-template>

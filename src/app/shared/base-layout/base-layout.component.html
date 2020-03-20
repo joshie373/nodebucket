@@ -14,28 +14,28 @@
       <!-- navbar container -->
       <div fxFlex="30" class="navbar-container">
         <!-- logo -->
-        <button class="logo black-outline" routerLink="/" mat-button>nodebucket</button>
+        <button class="logo black-outline" routerLink="/nodebucket" mat-button>nodebucket</button>
 
         <button class="navbar-link  black-outline" routerLink="/" mat-button>Home</button>
         <button class="navbar-link  black-outline" mat-button>About</button>
 
       </div>
       <div fxFlex="52"></div>
-      <div fxFlex>
-        <span  class="mat-h4">Hello </span><br>
-        <span class="mat-h5">Role: </span>
+      <!-- Shows only if the login name cookie exists -->
+      <div fxFlex *ngIf="cookie.get('loginName')">
+        <span  class="mat-h4" >Hello {{cookie.get('loginName')}}!</span><br>
+        <span class="mat-h5">Role: {{cookie.get('role')}}</span>
       </div>
       <div fxFlex>
-        <!-- need to figure out how to read change of cookie -->
-          <button *ngIf="!LoggedIn"  mat-raised-button color="accent" class="black-outline btn-rounded" [routerLink]="['/login']">Login</button>
+        <!-- button shows the text based off of the Action cookie -->
+        <button mat-raised-button color="accent" class="black-outline btn-rounded" (click)="Login()" >{{cookie.get('action')}}</button>
       </div>
-
     </mat-toolbar>
   </nav>
 
   <!-- main content -->
   <div fxFlex>
-    <main class="main-content" fxFlex="100%;">
+    <main class="main-content" fxFlex="100%;" >
       <router-outlet ></router-outlet>
     </main>
   </div>

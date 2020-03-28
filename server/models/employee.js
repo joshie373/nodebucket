@@ -10,6 +10,7 @@ let Employee = new Schema({
   role: {type: String},
   deleted: {type: Boolean},
   todo: [Item],
+  doing: [Item],
   done: [Item]
 }, {
    collection: 'employees'

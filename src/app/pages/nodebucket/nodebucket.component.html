@@ -8,12 +8,12 @@
  -->
 
  <!-- User div -->
-<div *ngIf="isUser" fxLayout="column">
+<div fxLayout="column">
   <div fxFlex>
     <div style="text-align: center;"><br>
       <button mat-raised-button color="accent" class="black-outline btn-rounded" (click)="openModal(template)">New Task</button>
     </div>
-  </div>
+  </div><br />
   <div cdkDropListGroup fxLayout="row">
 
     <!-- spacer div -->
@@ -25,47 +25,71 @@
       <div
         cdkDropList
         [cdkDropListData]="todo"
-        class=" mat-elevation-z8"
+        class="example-list mat-elevation-z8"
         (cdkDropListDropped)="drop($event)">
-        <div class="example-box" *ngFor="let item of todo" cdkDrag>
-          {{item.text}}
-          <button type="button" class="task-close" aria-label="Close" (click)="delete(item._id)">
-            <span aria-hidden="true" ><b>X</b></span>
-          </button>
+        <div class="example-box" *ngFor="let item of todo" cdkDrag >
+          <div fxLayout="row">
+            <div fxFlex="90" (click)="openEditModal(editTaskTemplate);setValues(cookie.get('empLogin'),item._id)">{{item.text}}</div>
+            <hr>
+            <button fxFlex="10" type="button" class="task-close" aria-label="Close" (click)="delete(item._id)">
+              <span aria-hidden="true" ><b>X</b></span>
+            </button>
+          </div>
+          <div fxFlex class="small text-secondary">Due Date: {{item.dueDate.substring(0, 10)}}</div>
         </div>
       </div>
     </div>
 
-
     <!-- spacer div -->
-    <div fxFlex="8"></div>
+    <div fxFlex="4"></div>
 
-   <!-- Done Container -->
-   <div fxFlex >
-    <h2 style="text-align: center; background-color:#ebe8e8da;">Done</h2>
-    <div
-      cdkDropList
-      [cdkDropListData]="done"
-      class="example-list mat-elevation-z8"
-      (cdkDropListDropped)="drop($event)">
-      <div class="example-box" *ngFor="let item of done" cdkDrag>
-        {{item.text}}
-        <button type="button" class="task-close" aria-label="Close" (click)="delete(item._id)">
-          <span aria-hidden="true" ><b>X</b></span>
-        </button>
+    <!-- Doing container -->
+    <div fxFlex >
+      <h2 style="text-align: center; background-color:#ebe8e8da;">Doing</h2>
+      <div
+        cdkDropList
+        [cdkDropListData]="doing"
+        class="example-list mat-elevation-z8"
+        (cdkDropListDropped)="drop($event)">
+        <div class="example-box" *ngFor="let item of doing" cdkDrag>
+          <div fxLayout="row">
+            <div fxFlex="90" (click)="openEditModal(editTaskTemplate);setValues(cookie.get('empLogin'),item._id)">{{item.text}}</div>
+            <hr>
+            <button fxFlex="10" type="button" class="task-close" aria-label="Close" (click)="delete(item._id)">
+              <span aria-hidden="true" ><b>X</b></span>
+            </button>
+          </div>
+          <div fxFlex class="small text-secondary">Due Date: {{item.dueDate.substring(0, 10)}}</div>
+        </div>
       </div>
     </div>
-  </div>
 
-     <!-- spacer div -->
-    <!-- <div fxFlex="8"></div> -->
+    <!-- spacer div -->
+    <div fxFlex="4"></div>
 
+    <!-- Done container -->
+    <div fxFlex >
+      <h2 style="text-align: center; background-color:#ebe8e8da;">Done</h2>
+      <div
+        cdkDropList
+        [cdkDropListData]="done"
+        class="example-list mat-elevation-z8"
+        (cdkDropListDropped)="drop($event)">
+        <div class="example-box" *ngFor="let item of done" cdkDrag>
+          <div fxLayout="row">
+            <div fxFlex="90" (click)="openEditModal(editTaskTemplate);setValues(cookie.get('empLogin'),item._id)">{{item.text}}</div>
+            <hr>
+            <button fxFlex="10" type="button" class="task-close" aria-label="Close" (click)="delete(item._id)">
+              <span aria-hidden="true" ><b>X</b></span>
+            </button>
+          </div>
+          <div fxFlex class="small text-secondary">Due Date: {{item.dueDate.substring(0, 10)}}</div>
+        </div>
+      </div>
+    </div>
 
-
-     <!-- spacer div -->
-     <div fxFlex="6"></div>
-
-
+    <!-- spacer div -->
+    <div fxFlex="6"></div>
 
   </div>
 
@@ -89,20 +113,63 @@
   <!-- Modal Body -->
   <div class="modal-body">
     <form [formGroup]="newTaskForm">
+      <label for="dueDate">Due Date</label>
+      <br>
+      <input class="form-control" type="date" id="dueDate" name="dueDate" formControlName="newTaskdueDate" [(ngModel)]="newTaskdueDateValue">
+      <div class="invalid-feedback" *ngIf="myNewTaskForm.newTaskdueDate.touched && myNewTaskForm.newTaskdueDate.errors?.required">
+        Due Date is required.
+      </div><br />
       <textarea formControlName="newTaskInput" style="width:100%" [(ngModel)]="newTaskText" matInput placeholder="enter task text"></textarea>
+      <div class="invalid-feedback" *ngIf="myNewTaskForm.newTaskInput.touched && myNewTaskForm.newTaskInput.errors?.required">
+        Task Text is required.
+      </div>
       <br><br>
-      <button  mat-raised-button color="accent" class="black-outline btn-rounded" (click)="newTask()">Add Task</button>
+      <button *ngIf="newTaskForm.valid" mat-raised-button color="accent" class="black-outline btn-rounded" (click)="newTask()">Add Task</button>
       <button  mat-raised-button class="btn-rounded" (click)="modalRef.hide(); newTaskForm.reset()">Cancel</button>
   </form>
   </div>
 
-  <!-- <div class="modal-body" *ngIf="editTaskClicked">
-    <form [formGroup]="taskForm">
-      <textarea formControlName="taskTextInput" style="width:100%" [(ngModel)]="TaskInputText" matInput placeholder="enter task text"></textarea>
+</ng-template>
+
+<!-- modal template  for edit task -->
+<ng-template #editTaskTemplate>
+  <div class="modal-header">
+
+    <!-- Modal Title -->
+    <h4 class="modal-title pull-left">Edit Task</h4>
+
+    <!-- Close Button -->
+    <button type="button"
+            class="close pull-right"
+            (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <!-- Modal Body -->
+  <div class="modal-body">
+    <form [formGroup]="editTaskForm">
+      <label for="editDateAdded">Date Added:  </label>
+      <input class="form-control form-control-sm" type="text" id="editDateAdded" formControlName="editDateAdded" disabled [ngModel]="editDateAddedValue"><br>
+
+      <label for="editDateModified">Date Last Modified:  </label>
+      <input class="form-control form-control-sm" type="text" id="editDateModified" formControlName="editDateModified" disabled [ngModel]="editDateModifiedValue"><br>
+
+      <label for="editLastModifiedBy">Last Modified By: </label>
+      <input class="form-control form-control-sm" type="text" id="editLastModifiedBy" formControlName="editLastModifiedBy" disabled [ngModel]="editLastModifiedByValue"><br>
+
+      <label  for="editDueDate">Due Date</label>
       <br>
-      <button  mat-raised-button color="accent" class="black-outline btn-rounded" (click)="newTask()">Add Task</button>
-      <button  mat-raised-button class="btn-rounded" (click)="modalRef.hide(); taskForm.reset()">Cancel</button>
+      <input class="form-control" type="date" id="editDueDate" name="editDueDate" formControlName="editDueDate" [(ngModel)]="editDueDateValue">
+      <br>
+
+      <textarea formControlName="editTaskTextInput" [ngModel]="editTaskText" (ngModelChange)="edit()" style="width:100%" matInput class="form-control" ></textarea>
+
+      <br><br>
+
+      <button  mat-raised-button color="accent" class="black-outline btn-rounded" (click)="updateTask()">Save Task</button>    
+      <button  mat-raised-button class="btn-rounded" (click)="modalRef.hide(); editTaskForm.reset()">Cancel</button>
   </form>
-  </div> -->
+  </div>
 
 </ng-template>

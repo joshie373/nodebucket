@@ -6,7 +6,7 @@
 ; Description: Base root layout page for nodebucket
 ;=============================================
  -->
-<div fxLayout="column">
+<div fxLayout="column" >
 
   <!-- navigation -->
   <nav fxFlex>
@@ -14,10 +14,10 @@
       <!-- navbar container -->
       <div fxFlex="30" class="navbar-container">
         <!-- logo -->
-        <button class="logo black-outline" routerLink="/nodebucket" mat-button>nodebucket</button>
+        <button class="logo black-outline" (click)="roleRoute()" mat-button>nodebucket</button>
 
         <button class="navbar-link  black-outline" routerLink="/" mat-button>Home</button>
-        <button class="navbar-link  black-outline" mat-button>About</button>
+        <button class="navbar-link  black-outline" routerLink="/about" mat-button>About</button>
 
       </div>
       <div fxFlex="52"></div>

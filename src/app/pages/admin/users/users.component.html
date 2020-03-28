@@ -1,0 +1,132 @@
+<!--
+; ============================================
+; Title: tasks.component.html
+; Date: 24 March 2020
+; Modified By: Joshua Hughes
+; Description: tasks management component 
+;   for nodebucket project admin users
+;=============================================
+ -->
+
+ <div fxLayout="column">
+    <div fxFlex fxLayout="row" >
+      <div fxFlex="2"></div>
+      <div fxFlex class="table-wrapper-scroll-y my-custom-scrollbar mat-elevation-z3" >
+        <table class="table table-bordered table-striped mb-0" >
+           <thead>
+             <tr>
+               <th>Employee ID</th>
+               <th>First Name</th>
+               <th>Last Name</th>
+               <th>Role</th>
+               <th>Actions</th>
+             </tr>
+           </thead>
+           <tbody >
+                   <tr *ngFor="let employee of Employees" scope="row">
+                       <td>{{employee.empId}}</td>
+                       <td>{{employee.firstName}}</td>
+                       <td>{{employee.lastName}}</td>
+                       <td>{{employee.role}}</td>
+                       <td><button class="btn btn-primary" (click)="openEditModal(editEmpTemplate);setValues(employee.empId)"><small>Edit</small></button>    <button class="btn btn-danger" (click)="delete(employee.empId)"><small>Delete</small></button></td>
+                   </tr>
+           </tbody>
+         </table>
+      </div>
+      <div fxFlex="5"></div>
+    </div>
+    <div fxFlex>
+      <div style="text-align: center;"><br>
+        <button mat-raised-button color="accent" class="black-outline btn-rounded" (click)="openModal(newEmpTemplate)">New Employee</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- modal template  for new employee -->
+<ng-template #newEmpTemplate>
+    <div class="modal-header">
+  
+      <!-- Modal Title -->
+      <h4 class="modal-title pull-left">New Employee</h4>
+  
+      <!-- Close Button -->
+      <button type="button"
+              class="close pull-right"
+              (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  
+    <!-- Modal Body -->
+    <div class="modal-body">
+      <form [formGroup]="newEmpForm" class="form-group">
+        <input type="text" class="form-control" formControlName="empId" [ngModel]="newEmpId" placeholder="empid">
+        <div class="invalid-feedback" *ngIf="myNewEmpForm.empId.touched && myNewEmpForm.empId.errors?.required">
+          Employee Id is required.
+        </div>
+        <div class="invalid-feedback" *ngIf="myNewEmpForm.empId.errors?.empExists">
+          Employee ID already Exists
+        </div><br>
+        <input type="text" class="form-control" formControlName="firstName" [ngModel]="newEmpFName" placeholder="first name">
+        <div class="invalid-feedback" *ngIf="myNewEmpForm.firstName.touched && myNewEmpForm.firstName.errors?.required">
+          First Name is required.
+        </div><br>
+        
+        <input type="text" class="form-control" formControlName="lastName" [ngModel]="newEmpLName" placeholder="last name">
+        <div class="invalid-feedback" *ngIf="myNewEmpForm.lastName.touched && myNewEmpForm.lastName.errors?.required">
+          Last Name is required.
+        </div><br>
+        
+        <select class="form-control" name="newEmployeeRole" id="newEmployeeRole" formControlName="role" [ngModel]="newEmpRole" >
+            <option value="Admin">Admin</option>
+            <option value="Manager">Manager</option>
+            <option value="User" Selected>User</option>
+        </select><div class="invalid-feedback" *ngIf="myNewEmpForm.role.touched && myNewEmpForm.role.errors?.required">
+          Role is required.
+        </div><br />
+        <button *ngIf="newEmpForm.valid" mat-raised-button color="accent" class="black-outline btn-rounded" (click)="newEmp()">Add Employee</button>
+        <button  mat-raised-button class="btn-rounded" (click)="modalRef.hide(); newEmpForm.reset()">Cancel</button>
+    </form>
+    </div>
+  
+  </ng-template>
+  
+   <!-- modal template  for edit employee -->
+   <ng-template #editEmpTemplate>
+    <div class="modal-header">
+  
+      <!-- Modal Title -->
+      <h4 class="modal-title pull-left">Edit Employee</h4>
+  
+      <!-- Close Button -->
+      <button type="button"
+              class="close pull-right"
+              (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  
+    <!-- Modal Body -->
+    <div class="modal-body">
+      <form [formGroup]="editEmployeeForm">
+     
+        <input type="text" class="form-control" formControlName="empId" [ngModel]="editEmpId" placeholder="empid" disabled><br>
+        <input type="text" class="form-control" formControlName="firstName" [ngModel]="editEmpFName" placeholder="first name"><br>
+        <input type="text" class="form-control" formControlName="lastName" [ngModel]="editEmpLName" placeholder="last name"><br>
+
+        <!-- <input type="text" class="form-control" formControlName="role" [ngModel]="editEmpRole" placeholder="role"><br> -->
+
+        <select class="form-control" name="editEmployeeRole" id="editEmployeeRole" formControlName="role" [ngModel]="editEmpRole">
+            <option value="Admin">Admin</option>
+            <option value="Manager">Manager</option>
+            <option value="User">User</option>
+        </select><br />
+
+        <button  mat-raised-button color="accent" class="black-outline btn-rounded" (click)="updateEmp()">Save Employee</button>
+        <button  mat-raised-button class="btn-rounded" (click)="modalRef.hide(); editEmployeeForm.reset()">Cancel</button>
+    </form>
+    </div>
+  
+  </ng-template>
+  
+  

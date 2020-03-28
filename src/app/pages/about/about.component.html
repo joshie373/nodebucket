@@ -1,0 +1,147 @@
+<!--
+; ============================================
+; Title: about.component.html
+; Date: 24 March 2020
+; Modified By: Joshua Hughes
+; Description: custom about us component for nodebucket project
+;=============================================
+ -->
+
+ <div fxLayout="column">
+     <div fxFlex fxLayout="row">
+        <div fxFlex="18"></div><!-- spacer div -->
+        <div fxFlex fxLayout="column" align="center" class="about">
+            <div fxFlex>
+                <h2>Welcome to Joshua Hughes' Nodebucket!</h2>
+                <p> nodebucket, is task management software designed to simplify the way you create, track, edit, and delete time sensitive material. This is a full-stack MEAN (MongoDB,Express, Angular, and Node.js) application, utilizing the concepts that were taught in previous courses. MongoDB will be used for data persistence. Node.js will be used for manipulating and returning saved records, SoapUI for unit testing, and Angular for user interactions. </p>
+            </div>
+            <div fxFlex><h4>How to use Nodebucket?</h4></div>
+            <div fxFlex fxLayout="row">
+                <div fxFlex="50">
+                    <p>To start using Nodebucket, you will need to be logged in. You will need to click the Login button in the top-right of the page.</p>
+                </div>
+                <div fxFlex="50">
+                    <img src="assets/images/about_login.PNG" class="img-fluid mx-auto d-block mat-card pointer" (click)="openModal(imageTemplate,'assets/images/about_login.PNG')">
+                </div>
+            </div>
+            <hr>
+            <div fxFlex><h5>User Role:</h5></div>
+            <hr>
+            <div fxFlex fxLayout="row">
+                <div fxFlex="50">
+                    <p>To get to the nodebucket task manager, click on nodebucket in the menu</p>
+                </div>
+                <div fxFlex="50">
+                    <img src="assets/images/about_nodebucket.PNG" class="img-fluid mx-auto d-block mat-card pointer" (click)="openModal(imageTemplate,'assets/images/about_nodebucket.PNG')">
+                </div>
+            </div>
+            <br>
+            <div fxFlex fxLayout="row">
+                <div fxFlex="50">
+                    <p>You will see you task management page here. These elements are draggable in between the todo, doing, and done columns.<br>
+                    <b>To delete a task:</b> click the red 'x' next to each task. <br>
+                    </p>
+                </div>
+                <div fxFlex="50">
+                    <img src="assets/images/about_nodebucket_user.PNG" class="img-fluid mx-auto d-block mat-card pointer" (click)="openModal(imageTemplate,'assets/images/about_nodebucket_user.PNG')">
+                </div>
+            </div>
+            <br>
+            <div fxFlex fxLayout="row">
+                <div fxFlex="50">
+                    <p><b>To add a new task:</b> click the New Task button<br>
+                    once the Modal pops up, enter in the task's text<br>
+                    click "add task" to add the task, or "cancel" to cancel.<br><br>
+                    *all new tasks are automatically added to the to-do column.
+                    </p>
+                </div>
+                <div fxFlex="50">
+                    <img src="assets/images/about_nodebucket_user_new.PNG" class="img-fluid mx-auto d-block mat-card pointer" (click)="openModal(imageTemplate,'assets/images/about_nodebucket_user_new.PNG')">
+                </div>
+            </div>
+            <br>
+            <div fxFlex><h5>Admin Role:</h5></div>
+            <hr>
+            <div fxFlex fxLayout="row">
+                <div fxFlex="50">
+                    <p>To get to the nodebucket admin homepage, click on nodebucket in the menu</p>
+                </div>
+                <div fxFlex="50">
+                    <img src="assets/images/about_nodebucket.PNG" class="img-fluid mx-auto d-block mat-card pointer" (click)="openModal(imageTemplate,'assets/images/about_nodebucket.PNG')">
+                </div>
+            </div>
+            <br>
+            <div fxFlex fxLayout="row">
+                <div fxFlex="50">
+                    <p>You will see a list of options here.<br>
+                    <b>To manage tasks:</b> click the Manage Tasks button <br>
+                    <b>To manage Users:</b> click the Manage Users button <br>
+                    <b>To view reports:</b> click the View Reports button <br>
+                    </p>
+                </div>
+                <div fxFlex="50">
+                    <img src="assets/images/about_admin_home.PNG" class="img-fluid mx-auto d-block mat-card pointer" (click)="openModal(imageTemplate,'assets/images/about_admin_home.PNG')">
+                </div>
+            </div>
+            <br>
+            <div fxFlex><h6>Managing Tasks:</h6></div>
+            <hr>
+            <div fxFlex fxLayout="row">
+                <div fxFlex="50">
+                    <p><b>To add a task:</b>Click the New task button</p>
+                    <p><b>To edit a task:</b>Click the edit button next to the task</p>
+                    <p><b>To delete a task:</b>Click the delete button next to the task</p>
+                </div>
+                <div fxFlex="50">
+                    <img src="assets/images/about_admin_tasks.PNG" class="img-fluid mx-auto d-block mat-card pointer" (click)="openModal(imageTemplate,'assets/images/about_admin_tasks.PNG')">
+                </div>
+            </div>
+            <br>
+            <div fxFlex><h6>Managing Users:</h6></div>
+            <hr>
+            <div fxFlex fxLayout="row">
+                <div fxFlex="50">
+                    <p><b>To add a user:</b>Click the New Employee button</p>
+                    <p><b>To edit a user:</b>Click the edit button next to the user</p>
+                    <p><b>To delete a user:</b>Click the delete button next to the user</p>
+                    *note: Core users cannot be deletes these are employee ids 1007,1008,1009,1010,1011,1012.
+                </div>
+                <div fxFlex="50">
+                    <img src="assets/images/about_admin_users.PNG" class="img-fluid mx-auto d-block mat-card pointer" (click)="openModal(imageTemplate,'assets/images/about_admin_users.PNG')">
+                </div>
+            </div><br>
+            <div fxFlex><h6>Viewing Reports:</h6></div>
+            <hr>
+            <div fxFlex fxLayout="row">
+                <div fxFlex="50">
+                    <p>Reports will show the totals for each user, as well as the stats for the team</p>
+                </div>
+                <div fxFlex="50">
+                    <img src="assets/images/about_admin_reports.PNG" class="img-fluid mx-auto d-block mat-card pointer" (click)="openModal(imageTemplate,'assets/images/about_admin_users.PNG')">
+                </div>
+            </div>
+            <br>
+        </div>
+        <div fxFlex="20"></div><!-- spacer div -->
+     </div>
+
+ </div>
+
+    <!-- modal template  for image -->
+    <ng-template #imageTemplate>
+          <!-- Modal Title -->
+          <h3 class="modal-title pull-left">Image</h3>
+      
+          <!-- Close Button -->
+          <button type="button"
+                  class="close pull-right"
+                  (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      
+        <!-- Modal Body -->
+        <div class="modal-body">
+            <img src="{{imgSource}}"  class="img-fluid mx-auto d-block mat-card">
+        </div>
+      
+      </ng-template>

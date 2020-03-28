@@ -48,6 +48,20 @@ mongoose.connect(conn, {
 //imports employee model
 const Employee = require("./models/employee");
 
+//findAllEmployees
+app.get("/api/employees/", function (request, response) {
+  Employee.find({}, function(error, employees) {
+    if (error) {
+      console.log(error);
+      return next(error);
+    }
+    else{
+      console.log(employees);
+      response.json(employees);
+    }
+  });
+});
+
 //findEmployeeById
 app.get("/api/employees/:empId", function (request, response) {
   var empId = request.params.empId;
@@ -63,11 +77,81 @@ app.get("/api/employees/:empId", function (request, response) {
   });
 });
 
+//CreateEmployee
+app.post("/api/employees/", function (request,response,next) {
+  Employee.create(request.body, function(err, employee) {
+    if (err) {
+      console.log(err);
+      return next(err);
+    }
+    else{
+      console.log(employee);
+      response.json(employee);
+    }
+  });
+});
+
+// Delete employee 
+app.delete("/api/employees/:empId", function(req, res, next) {
+  Employee.findOne({ empId: req.params.empId }, function(err, employee) {
+    if (err) {
+      console.log(err);
+      return next(err);
+    } else {
+      console.log(employee);
+      if (employee) {
+        employee.remove();
+        res.json("Employee Deleted!!")
+      } else {
+        console.log("Unable to locate employee: ${{req.params.empId}}");
+        res.status(200).send({
+          type: "warning",
+          text: "Unable to locate employee: ${{req.params.empId}}"
+        });
+      }
+    }
+  });
+});
+
+// Update employee 
+app.put("/api/employees/:empId", function(req, res, next) {
+  Employee.findOne({ empId: req.params.empId }, function(err, employee) {
+    if (err) {
+      console.log(err);
+      return next(err);
+    } else {
+      console.log(employee);
+      if (employee) {
+        employee.set({
+          'empId': req.body.empId,
+          'firstName': req.body.firstName,
+          'lastName': req.body.lastName,
+          'role': req.body.role
+        });
+        employee.save(function(err, emp1) {
+          if (err) {
+            console.log(err);
+            return next(err);
+          } else {
+            console.log(emp1);
+            res.json(emp1);
+          }
+        });
+      } else {
+        console.log("Unable to locate employee: ${{req.params.empId}}");
+        res.status(200).send({
+          type: "warning",
+          text: "Unable to locate employee: ${{req.params.empId}}"
+        });
+      }
+    }
+  });
+});
 
 //findAllTasks
 app.get("/api/employees/:empId/tasks", function (request, response,next) {
   var empId = request.params.empId;
-  Employee.findOne({'empId': empId},'empId todo done', function(error, employee) {
+  Employee.findOne({'empId': empId},'empId todo done doing', function(error, employee) {
     if (error) {
       console.log(error);
       return next(error);
@@ -92,7 +176,11 @@ app.post("/api/employees/:empId/tasks", function (request,response,next) {
         console.log(employee);
 
         const item = {
-          text: request.body.text
+          text: request.body.text,
+          dueDate: request.body.dueDate,
+          dateAdded: new Date(),
+          dateLastModified: new Date(),
+          lastModifiedBy: request.params.empId
         };
 
         employee.todo.push(item);
@@ -111,7 +199,7 @@ app.post("/api/employees/:empId/tasks", function (request,response,next) {
   });
 });
 
-//Update Task
+//Update all Tasks
 app.put("/api/employees/:empId/tasks/", function(req, res, next) {
   Employee.findOne({ 'empId': req.params.empId }, function(err, employee) {
     if (err) {
@@ -123,6 +211,7 @@ app.put("/api/employees/:empId/tasks/", function(req, res, next) {
       console.log(req.body);
       employee.set({
         'todo': req.body.todo,
+        'doing': req.body.doing,
         'done': req.body.done
       });
       console.log(employee);
@@ -139,9 +228,120 @@ app.put("/api/employees/:empId/tasks/", function(req, res, next) {
   });
 });
 
+// Update single task
+app.put("/api/employees/:empId/tasks/:taskId/update", function(req, res, next) {
+  Employee.findOne({ empId: req.params.empId }, function(err, employee) {
+    if (err) {
+      console.log(err);
+      return next(err);
+    } else {
+      console.log(employee);
+      const todoItem = employee.todo.find(
+        item => item._id.toString() === req.params.taskId
+      );
+      const doingItem = employee.doing.find(
+        item => item._id.toString() === req.params.taskId
+      );
+      const doneItem = employee.done.find(
+        item => item._id.toString() === req.params.taskId
+      );
+      if (todoItem) {
+        employee.todo.id(todoItem._id).set({
+          'text': req.body.text,
+          'dateAdded': req.body.dateAdded,
+          'dateLastModified': new Date(),
+          'dueDate': req.body.dueDate,
+          'lastModifiedBy': req.body.lastModifiedBy
+        });
+        employee.save(function(err, emp1) {
+          if (err) {
+            console.log(err);
+            return next(err);
+          } else {
+            console.log(emp1);
+            res.json(emp1);
+          }
+        });
+      } else if (doingItem) {
+        employee.doing.id(doingItem._id).set({
+          'text': req.body.text,
+          'dateAdded': req.body.dateAdded,
+          'dateLastModified': new Date(),
+          'dueDate': req.body.dueDate,
+          'lastModifiedBy': req.body.lastModifiedBy
+        });
+        employee.save(function(err, emp2) {
+          if (err) {
+            console.log(err);
+            return next(err);
+          } else {
+            console.log(emp2);
+            res.json(emp2);
+          }
+        });
+      } else if (doneItem) {
+        employee.done.id(doneItem._id).set({
+          'text': req.body.text,
+          'dateAdded': req.body.dateAdded,
+          'dateLastModified': new Date(),
+          'dueDate': req.body.dueDate,
+          'lastModifiedBy': req.body.lastModifiedBy
+        });
+        employee.save(function(err, emp3) {
+          if (err) {
+            console.log(err);
+            return next(err);
+          } else {
+            console.log(emp3);
+            res.json(emp3);
+          }
+        });
+      } else {
+        console.log("Unable to locate task: ${{req.params.taskId}}");
+        console.log(req.params.taskId);
+        res.status(200).send({
+          type: "warning",
+          text: "Unable to locate task: ${{req.params.taskId}}"
+        });
+      }
+    }
+  });
+});
 
-
-
+// find single task
+app.get("/api/employees/:empId/tasks/:taskId", function(req, res, next) {
+  Employee.findOne({ empId: req.params.empId }, function(err, employee) {
+    if (err) {
+      console.log(err);
+      return next(err);
+    } else {
+      console.log(employee);
+      const todoItem = employee.todo.find(
+        item => item._id.toString() === req.params.taskId
+      );
+      const doingItem = employee.doing.find(
+        item => item._id.toString() === req.params.taskId
+      );
+      const doneItem = employee.done.find(
+        item => item._id.toString() === req.params.taskId
+      );
+      if (todoItem) {
+        res.json(todoItem);
+      } else if (doingItem) {
+        res.json(doingItem); 
+      }else if (doneItem) {
+        res.json(doneItem); 
+      } else {
+        console.log("Unable to locate task: ${{req.params.taskId}}");
+        console.log(req.params.taskId);
+        res.status(200).send({
+          type: "warning",
+          text: "Unable to locate task: ${{req.params.taskId}}"
+        });
+      }
+    }
+  });
+});
 
 // DeleteTask API - an API that's used to delete a specific task for a single employee
 app.delete("/api/employees/:empId/tasks/:taskId", function(req, res, next) {
@@ -152,6 +352,9 @@ app.delete("/api/employees/:empId/tasks/:taskId", function(req, res, next) {
     } else {
       console.log(employee);
       const todoItem = employee.todo.find(
+        item => item._id.toString() === req.params.taskId
+      );
+      const doingItem = employee.doing.find(
         item => item._id.toString() === req.params.taskId
       );
       const doneItem = employee.done.find(
@@ -168,8 +371,8 @@ app.delete("/api/employees/:empId/tasks/:taskId", function(req, res, next) {
             res.json(emp1);
           }
         });
-      } else if (doneItem) {
-        employee.done.id(doneItem._id).remove();
+      } else if (doingItem) {
+        employee.doing.id(doingItem._id).remove();
         employee.save(function(err, emp2) {
           if (err) {
             console.log(err);
@@ -177,6 +380,17 @@ app.delete("/api/employees/:empId/tasks/:taskId", function(req, res, next) {
           } else {
             console.log(emp2);
             res.json(emp2);
+          }
+        });
+      } else if (doneItem) {
+        employee.done.id(doneItem._id).remove();
+        employee.save(function(err, emp3) {
+          if (err) {
+            console.log(err);
+            return next(err);
+          } else {
+            console.log(emp3);
+            res.json(emp3);
           }
         });
       } else {

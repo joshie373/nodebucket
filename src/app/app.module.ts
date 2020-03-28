@@ -23,6 +23,12 @@ import { NodebucketComponent } from './pages/nodebucket/nodebucket.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { AdminComponent } from './pages/admin/admin.component';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { AboutComponent } from './pages/about/about.component';
+import { UsersComponent } from './pages/admin/users/users.component';
+import { TasksComponent } from './pages/admin/tasks/tasks.component';
+import { ReportsComponent } from './pages/admin/reports/reports.component';
 
 
 @NgModule({
@@ -31,7 +37,13 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     BaseLayoutComponent,
     AuthLayoutComponent,
     HomeComponent,
-    NodebucketComponent
+    NodebucketComponent,
+    AdminComponent,
+    NotFoundComponent,
+    AboutComponent,
+    UsersComponent,
+    TasksComponent,
+    ReportsComponent
   ],
   imports: [
     BrowserModule,

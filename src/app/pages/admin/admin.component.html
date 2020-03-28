@@ -1,0 +1,30 @@
+<!--
+; ============================================
+; Title: admin.component.html
+; Date: 23 March 2020
+; Author: Joshua Hughes
+; Description: admin component for nodebucket project
+;=============================================
+ -->
+ <div fxLayout="column">
+   <br />
+   <div fxFlex fxLayout="row" align="center">
+    <div fxFlex>
+      <button *ngIf="cookie.get('role')==='Admin'" mat-raised-button color="accent" [routerLink]="[{ outlets: { adminRouter: ['users'] } }]" class="black-outline btn-rounded" routerLinkActive="mat-primary">Manage Users</button>
+    </div>
+    <div fxFlex>
+      <button mat-raised-button color="accent" [routerLink]="[{ outlets: { adminRouter: ['tasks'] } }]" class="black-outline btn-rounded" routerLinkActive="mat-primary">Manage Tasks</button>
+    </div>
+    <div fxFlex>
+      <button mat-raised-button color="accent" [routerLink]="[{ outlets: { adminRouter: ['reports'] } }]" class="black-outline btn-rounded" routerLinkActive="mat-primary">View Reports</button>
+    </div>
+   </div>
+<br />
+
+   <router-outlet name="adminRouter"></router-outlet>
+
+ </div>
+ 
+
+ 
+

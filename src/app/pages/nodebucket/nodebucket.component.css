@@ -9,13 +9,17 @@
 }
 
 .example-box {
-  padding: 20px 10px;
-  border-bottom: solid 1px #ccc;
+  /* padding: 20px 10px; */
+  padding-top:20px;
+  padding-left:10px;
+  padding-right:10px;
+  padding-bottom:none;
+  border-bottom: solid 1px rgb(106, 135, 231);
   color: rgba(0, 0, 0, 0.87);
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+  /* display: flex; */
+  flex-direction: column;
+  /* align-items: center;
+  justify-content: space-between; */
   box-sizing: border-box;
   cursor: move;
   background: white;
@@ -51,4 +55,9 @@
   border-radius: 20px !important;
   color:white;
   cursor: pointer;
+  float:right;
+}
+.invalid-feedback {
+  display: block;
+  color: red;
 }

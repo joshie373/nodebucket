@@ -19,20 +19,96 @@ export class NodebucketComponent implements OnInit {
 
   constructor(private cookie: CookieService,private http: HttpClient,private modalService: BsModalService,public fb: FormBuilder) { }
 
-//----modal elements-----
-modalRef: BsModalRef;
+  //----modal elements-----
+  modalRef: BsModalRef;
 
-newTaskForm: FormGroup;
-newTaskText: string;
+  newTaskForm: FormGroup;
+  newTaskText: string;
+  newTaskdueDateValue: any;
 
-//open modal function
-openModal(template: TemplateRef<any>) {
-  this.modalRef = this.modalService.show(template);
-  this.newTaskForm = this.fb.group({
-    newTaskInput : ['', [Validators.required]]
-  })
-}
-//---end modal elements----
+  editTaskForm: FormGroup;
+  editTaskText: string;
+  editTaskId: string;
+  editTaskEmployeeId:string;
+  editDueDateValue: any;
+  editDateAddedValue: any;
+  editDateModifiedValue:any;
+  editLastModifiedByValue:any;
+
+  //open modal function
+  openModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template);
+    this.newTaskForm = this.fb.group({
+      newTaskInput : ['', [Validators.required]],
+      newTaskdueDate: ['', [Validators.required]]
+    })
+  }
+
+  //opens edit task modal
+  openEditModal(editTaskTemplate: TemplateRef<any>) {
+
+    this.editTaskForm = this.fb.group({
+      editTaskTextInput : ['', [Validators.required]],
+      editTaskIdInput : ['', [Validators.required]], 
+      editDueDate: ['', [Validators.required]],
+      editDateAdded:[],
+      editDateModified:[],
+      editLastModifiedBy:[]
+    })
+    this.modalRef = this.modalService.show(editTaskTemplate);
+    
+  }
+
+  //sets values of the edit task input form controls
+  setValues(empId,taskId){
+    //sets local values
+    this.editTaskEmployeeId = empId;
+    this.editTaskId = taskId;
+    //http request to get text for task
+    this.getTaskHttp(empId,taskId).subscribe(
+      (res) => {
+      if(res){
+        console.log(res['text']);
+        this.editTaskText = res['text'];
+        this.editDueDateValue = res['dueDate'];
+        this.editDateAddedValue = res['dateAdded'];
+        this.editDateModifiedValue = res['dateLastModified'];
+        this.editLastModifiedByValue = res['lastModifiedBy'];
+
+        this.editDueDateValue=this.editDueDateValue.substring(0, 10);
+        this.editDateAddedValue=this.editDateAddedValue.substring(0, 10);
+        this.editDateModifiedValue=this.editDateModifiedValue.substring(0, 10);
+
+      }
+      else{
+        console.log(res['text']);
+        this.editTaskText = res['text'];
+        this.editDueDateValue = res['dueDate'];
+        this.editDateAddedValue = res['dateAdded'];
+      }
+
+      }, (error) => {
+        console.log('Error: '+error);
+      }
+    );
+
+    //sets values of form controls. 
+    this.editTaskForm.patchValue({
+      editTaskTextInput: this.editTaskText,
+      editTaskIdInput: this.editTaskEmployeeId,
+      editDueDate: this.editDueDateValue,
+      editDateAdded: this.editDateAddedValue,
+      editDateModified: this.editDateModifiedValue,
+      editLastModifiedBy: this.editLastModifiedByValue
+    });
+    
+  }
+
+  // Getter to access form control
+  get myNewTaskForm(){
+    return this.newTaskForm.controls;
+  }
+  //---end modal elements----
 
  //used to connect to node server to run api calls
  baseUri:string = 'http://localhost:3000/api';
@@ -42,12 +118,8 @@ openModal(template: TemplateRef<any>) {
 
  //local arrays to be used for the drag and drop
   todo = [];
+  doing = [];
   done = [];
-
-  //boolean for identifying employee role
-  isUser: boolean = false;
-  isAdmin:boolean = false;
-  isManager: boolean=false;
 
   // function for drag and dop events
   drop(event: CdkDragDrop<string[]>) {
@@ -67,10 +139,11 @@ openModal(template: TemplateRef<any>) {
     this.FindAllTasksHttp(this.cookie.get('empLogin')).subscribe(
       (res) => {
       if(res){
-        console.log(res.todo);
+        console.log(res);
 
         //sets local array to the response array
         this.todo = res.todo;
+        this.doing = res.doing;
         this.done = res.done;
       }
       else{
@@ -93,22 +166,49 @@ openModal(template: TemplateRef<any>) {
   saveAll(){
     let newItems: {};
     let newTodo= [];
+    let newDoing = [];
     let newDone = [];
+
+
 
     //removes id field from todo array objects and pushes to newTodo array
     this.todo.forEach(e =>{
-      let temp = {"text":e.text};
+      let temp = {
+        "text":e.text,
+        "dueDate": e.dueDate,
+        "dateAdded":e.dateAdded,
+        "dateLastModified":e.dateLastModified,
+        "lastModifiedBy": e.lastModifiedBy
+      };
       newTodo.push(temp)
+    });
+
+    //removes id field from doing array objects and pushes to newDoing array
+    this.doing.forEach(e =>{
+      let temp = {
+        "text":e.text,
+        "dueDate": e.dueDate,
+        "dateAdded":e.dateAdded,
+        "dateLastModified":e.dateLastModified,
+        "lastModifiedBy": e.lastModifiedBy
+      };
+      newDoing.push(temp)
     });
 
     //removes id field from done array objects and pushes to newTodo array
     this.done.forEach(e =>{
-      let temp = {"text":e.text};
+      let temp = {
+        "text":e.text,
+        "dueDate": e.dueDate,
+        "dateAdded":e.dateAdded,
+        "dateLastModified":e.dateLastModified,
+        "lastModifiedBy": e.lastModifiedBy
+      };
       newDone.push(temp)
     });
 
     //builds single object with newTodo and newDone arrays
-    newItems = {todo: newTodo ,done: newDone};
+    newItems = {todo: newTodo ,doing: newDoing,done: newDone};
     newItems = JSON.stringify(newItems);//turns the new object into JSON
 
     let id = this.cookie.get('empLogin');//gets the employee id from the cookies
@@ -121,15 +221,13 @@ openModal(template: TemplateRef<any>) {
   save(){
     this.saveAll().subscribe(
       (res) => {
+        console.log("save log");
         console.log(res);
+        this.FindAllTasks();//reloads task list after delete
       }, (error) => {
         console.log('Error: '+error);
       }
     );
-    console.log("save task done");
-    console.log(this.done);
-    console.log("save task todo");
-    console.log(this.todo);
   }
 
   //delete function
@@ -168,19 +266,16 @@ openModal(template: TemplateRef<any>) {
   newTask(){
     // let task = {"text":"please delete me"};
 
-    let task = {"text": this.newTaskText};
+    let task = {"text": this.newTaskText, "dueDate":this.newTaskdueDateValue };
     this.newTaskHttp(this.cookie.get('empLogin'),task).subscribe(
       (res) => {
       if(res){
-        console.log(res.todo);
+        console.log(res);
 
         //sets local array to the response array
         this.todo = res.todo;
+        this.doing = res.doing;
         this.done = res.done;
-        console.log("new task done");
-        console.log(this.done);
-        console.log("new task todo");
-        console.log(this.todo);
         //closes modal  and clears form on successful insert
         this.modalRef.hide();
         this.newTaskForm.reset();
@@ -202,37 +297,65 @@ openModal(template: TemplateRef<any>) {
     return this.http.post(url,task, {headers: this.headers});
   }
 
-  //function to check the role of the user logged in
-  logCheck(){
-    switch (this.cookie.get('role')) {
-      case "User":
-        this.isUser = true;
-        this.isAdmin = false;
-        this.isManager = false;
-        break;
-      case "Admin":
-        this.isUser = false;
-        this.isAdmin = true;
-        this.isManager = false;
-        break;
-      case "Manager":
-        this.isUser = false;
-        this.isAdmin = false;
-        this.isManager = true;
-          break;
+  //get single task HTTP request
+  getTaskHttp(id,taskId){
+      let url = `${this.baseUri}/employees/${id}/tasks/${taskId}`;
+      return this.http.get(url, {headers: this.headers});
+  }
 
-      default:
-        break;
+  //updateTask function
+  updateTask(){
+
+
+      // converts date back to ISo string for addin to DB
+      let convertedDueDate = new Date(this.editDueDateValue).toISOString();
+      let convertedDateAdded = new Date(this.editDateAddedValue).toISOString();
+
+      //makes task object
+      let task = {"text": this.editTaskText,"dueDate":convertedDueDate,"lastModifiedBy":this.cookie.get('empLogin'),"dateAdded":convertedDateAdded};
+      console.log("task");
+      console.log(task);
+      //update task
+      this.updateTaskHttp(this.editTaskEmployeeId,this.editTaskId,task).subscribe(
+        (res) => {
+        if(res){
+          console.log(res);
+
+        //closes modal  and clears form on successful insert
+        this.modalRef.hide();
+        this.editTaskForm.reset();
+        this.FindAllTasks();//reloads task list after delete
+
+        }
+        else{
+          console.log(res);
+        //closes modal  and clears form on successful insert
+        this.modalRef.hide();
+        this.editTaskForm.reset();
+        this.FindAllTasks();//reloads task list after delete
+        }
+
+        }, (error) => {
+          console.log('Error: '+error);
+        }
+      );
+  }
+
+  //editor
+  edit(){
+    this.editTaskText = this.editTaskForm.controls.editTaskTextInput.value;
+  }
+
+  //update task http request
+  updateTaskHttp(empId,taskId,task): Observable<any> {
+    let url = `${this.baseUri}/employees/${empId}/tasks/${taskId}/update`;
+    return this.http.put(url,task, {headers: this.headers});
+  }
+
+  //on init functions
+    ngOnInit() {
+      this.FindAllTasks();
     }
-  }
-
-//on init functions
-  ngOnInit() {
-    this.FindAllTasks();
-    this.logCheck();
-
-
-  }
 }
 
 

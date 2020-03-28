@@ -1,0 +1,93 @@
+<!--
+; ============================================
+; Title: reports.component.html
+; Date: 26 March 2020
+; Modified By: Joshua Hughes
+; Description: reports component 
+;   for nodebucket project admin users
+;=============================================
+ -->
+
+ <div fxLayout="column">
+     <div fxFlex fxLayout="row" fxLayoutGap="25px">
+         <div fxFlex>
+            <mat-card mat-card>
+                <mat-card-title>Tasks by user:</mat-card-title>
+                <mat-card-content>
+                    <table class="table table-striped table-sm">
+                        <thead>
+                          <tr>
+                            <th>Employee</th>
+                            <th>Assigned</th>
+                            <th>In Progress</th>
+                            <th>Done</th>
+                            <th>Total</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let employee of Employees">
+                            <td><b>{{employee.firstName + ' ' + employee.lastName}}:</b></td>
+                            <td>{{employee.todo.length}}</td>
+                            <td>{{employee.doing.length}}</td>
+                            <td>{{employee.done.length}}</td>
+                            <td>{{employee.todo.length + employee.doing.length + employee.done.length}}</td>
+                          </tr>
+                          <tr>
+                              <td></td><td></td><td></td><td><b>Total:</b></td><td>{{Tasks.length}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                </mat-card-content>
+            </mat-card>
+         </div>
+         <div fxFlex fxLayout="column" fxLayoutGap="25px">
+             <mat-card>
+                 <mat-card-title>Team Productivity</mat-card-title>
+                 <mat-card-content>
+                    <table class="table table-sm">
+                        <tbody>
+                            <tr>
+                                <td><b>Tasks touched: </b></td>
+                                <td>     </td>
+                                <td>{{getTouchedToday()}}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Tasks added: </b></td>
+                                <td>     </td>
+                                <td>{{getAddedToday()}}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Tasks Due: </b></td>
+                                <td>     </td>
+                                <td>{{getDueToday()}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                 </mat-card-content>
+             </mat-card>
+         </div>
+         <div fxFlex>
+            <mat-card>
+                <mat-card-title>Individual Productivity</mat-card-title>
+                <mat-card-content>
+                   <table class="table table-sm">
+                       <thead>
+                           <th>Employee</th>
+                           <th>Touched today</th>
+                           <th>Added today</th>
+                           <th>Due today</th>
+                       </thead>
+                       <tbody>
+                           <tr *ngFor="let employee of Employees">
+                               <td>{{employee.empId}}</td>
+                               <td>{{getIndTouchedToday(employee.empId)}}</td>
+                               <td>{{getIndAddedToday(employee.empId)}}</td>
+                               <td>{{getIndDueToday(employee.empId)}}</td>
+                           </tr>
+                       </tbody>
+                   </table>
+                </mat-card-content>
+            </mat-card>
+        </div>
+     </div>
+ </div>

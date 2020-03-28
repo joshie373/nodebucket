@@ -1,0 +1,12 @@
+.pointer{
+    cursor: pointer;
+}
+
+.about{
+    height:450px;
+    overflow:auto;
+}
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* make scrollbar transparent */
+}

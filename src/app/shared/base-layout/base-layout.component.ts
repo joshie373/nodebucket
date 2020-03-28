@@ -23,6 +23,23 @@ export class BaseLayoutComponent implements OnInit {
   }
 
 
+  //role router for nodebucket.
+  roleRoute(){
+    switch (this.cookie.get('role')) {
+      case "User":
+        this.router.navigate(["/nodebucket"]);
+        break;
+      case "Admin":
+        this.router.navigate(["/admin"]);
+        break;
+      case "Manager":
+        this.router.navigate(["/admin"]);
+        break;
+    }
+  }
+
+
+
   //on click of button returns user to login page, regardless of status.
   Login(){
     this.router.navigate(["/login"]);

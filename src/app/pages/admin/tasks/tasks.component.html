@@ -1,0 +1,157 @@
+<!--
+; ============================================
+; Title: tasks.component.html
+; Date: 24 March 2020
+; Modified By: Joshua Hughes
+; Description: tasks management component 
+;   for nodebucket project admin users
+;=============================================
+ -->
+
+<div fxLayout="column">
+  <div fxFlex fxLayout="row" >
+    <div fxFlex="2"></div>
+    <div fxFlex class="table-wrapper-scroll-y my-custom-scrollbar mat-elevation-z3" >
+      <table class="table table-bordered table-striped mb-0 small" >
+         <thead>
+           <tr>
+             <th>Task</th>
+             <th>Status</th>
+             <th>Owner</th>
+             <th>Due Date</th>
+             <th>Date Added</th>
+             <th>Date Last Modified</th>
+             <th>Last Modified By</th>
+             <th>Actions</th>
+           </tr>
+         </thead>
+         <tbody *ngFor="let employee of Employees">
+                 <tr *ngFor="let task of employee.todo" scope="row">
+                     <td>{{task.text}}</td>
+                     <td>Assigned</td>
+                     <td>{{employee.firstName + ' ' + employee.lastName}}({{employee.role}})</td>
+                      <td>{{task.dueDate.substring(0, 10)}}</td>
+                      <td>{{task.dateAdded.substring(0, 10)}}</td>
+                      <td>{{task.dateLastModified.substring(0, 10)}}</td>
+                      <td>{{task.lastModifiedBy}}</td>
+                     <td><button class="btn btn-primary" (click)="openEditModal(editTaskTemplate);setValues(employee.empId,task._id,true)"><small>Edit</small></button>    <button class="btn btn-danger" (click)="delete(employee.empId,task._id)"><small>Delete</small></button></td>
+                 </tr>
+                 <tr *ngFor="let task of employee.doing" scope="row">
+                    <td>{{task.text}}</td>
+                    <td>In Progress</td>
+                    <td>{{employee.firstName + ' ' + employee.lastName}}({{employee.role}})</td>
+                    <td>{{task.dueDate.substring(0, 10)}}</td>
+                    <td>{{task.dateAdded.substring(0, 10)}}</td>
+                    <td>{{task.dateLastModified.substring(0, 10)}}</td>
+                    <td>{{task.lastModifiedBy}}</td>
+                    <td><button class="btn btn-primary" (click)="openEditModal(editTaskTemplate);setValues(employee.empId,task._id)"><small>Edit</small></button>    <button class="btn btn-danger" (click)="delete(employee.empId,task._id)"><small>Delete</small></button></td>
+              </tr>
+                 <tr *ngFor="let task of employee.done" scope="row">
+                     <td>{{task.text}}</td>
+                     <td>Done</td>
+                     <td>{{employee.firstName + ' ' + employee.lastName}}({{employee.role}})</td>
+                     <td>{{task.dueDate.substring(0, 10)}}</td>
+                     <td>{{task.dateAdded.substring(0, 10)}}</td>
+                     <td>{{task.dateLastModified.substring(0, 10)}}</td>
+                     <td>{{task.lastModifiedBy}}</td>
+                     <td><button class="btn btn-primary" (click)="openEditModal(editTaskTemplate);setValues(employee.empId,task._id)"><small>Edit</small></button>    <button class="btn btn-danger" (click)="delete(employee.empId,task._id)"><small>Delete</small></button></td>
+                 </tr>
+         </tbody>
+       </table>
+    </div>
+    <div fxFlex="5"></div>
+  </div>
+  <div fxFlex>
+    <div style="text-align: center;"><br>
+      <button mat-raised-button color="accent" class="black-outline btn-rounded" (click)="openModal(newTaskTemplate)">New Task</button>
+    </div>
+  </div>
+</div>
+
+  <!-- modal template  for new task -->
+<ng-template #newTaskTemplate>
+  <div class="modal-header">
+
+    <!-- Modal Title -->
+    <h4 class="modal-title pull-left">New Task</h4>
+
+    <!-- Close Button -->
+    <button type="button"
+            class="close pull-right"
+            (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <!-- Modal Body -->
+  <div class="modal-body">
+    <form [formGroup]="newTaskForm">
+      <label for="newTaskEmployeeId">Assign to:</label><br>
+      <select id="newTaskEmployeeId" class="form-control" formControlName="newTaskIdInput"
+      [(ngModel)]="newTaskselected" >
+        <option *ngFor="let employee of Employees" value="{{employee.empId}}">{{employee.firstName + ' ' + employee.lastName}}</option>
+      </select>
+      <div class="invalid-feedback" *ngIf="myNewTaskForm.newTaskIdInput.touched && myNewTaskForm.newTaskIdInput.errors?.required">
+        Employee is required.
+      </div><br />
+
+      <label for="dueDate">Due Date</label>
+      <br>
+      <input class="form-control" type="date" id="dueDate" name="dueDate" formControlName="newTaskdueDate" [(ngModel)]="newTaskdueDateValue">
+      <div class="invalid-feedback" *ngIf="myNewTaskForm.newTaskdueDate.touched && myNewTaskForm.newTaskdueDate.errors?.required">
+        Due Date is required.
+      </div><br />
+
+      <textarea formControlName="newTaskTextInput" style="width:100%" [(ngModel)]="newTaskText" matInput placeholder="enter task text" class="form-control"></textarea>
+      <div class="invalid-feedback" *ngIf="myNewTaskForm.newTaskTextInput.touched && myNewTaskForm.newTaskTextInput.errors?.required">
+        Task Text is required.
+      </div>
+
+      <br><br>
+
+      <button *ngIf="newTaskForm.valid" mat-raised-button color="accent" class="black-outline btn-rounded" (click)="newTask()">Add Task</button>
+      <button  mat-raised-button class="btn-rounded" (click)="modalRef.hide(); newTaskForm.reset()">Cancel</button>
+  </form>
+  </div>
+
+</ng-template>
+
+ <!-- modal template  for edit task -->
+ <ng-template #editTaskTemplate>
+  <div class="modal-header">
+
+    <!-- Modal Title -->
+    <h4 class="modal-title pull-left">Edit Task</h4>
+
+    <!-- Close Button -->
+    <button type="button"
+            class="close pull-right"
+            (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <!-- Modal Body -->
+  <div class="modal-body">
+    <form [formGroup]="editTaskForm">
+      <label for="editTaskEmployeeId">Assigned to:</label><br>
+      <select id="editTaskEmployeeId" class="form-control" formControlName="editTaskIdInput"
+      [(ngModel)]="editTaskEmployeeId" >
+        <option *ngFor="let employee of Employees" value="{{employee.empId}}">{{employee.firstName + ' ' + employee.lastName}}</option>
+      </select><br />
+      <label for="editDueDate">Due Date</label>
+      <br>
+      <input class="form-control" type="date" id="editDueDate" name="editDueDate" formControlName="editDueDate" [(ngModel)]="editDueDateValue">
+      <br><br>
+
+      <textarea formControlName="editTaskTextInput" [ngModel]="editTaskText" (ngModelChange)="edit()" style="width:100%" matInput class="form-control" ></textarea>
+
+      <br><br>
+
+      <button  mat-raised-button color="accent" class="black-outline btn-rounded" (click)="updateTask()">Save Task</button>    
+      <button  mat-raised-button class="btn-rounded" (click)="modalRef.hide(); editTaskForm.reset()">Cancel</button>
+  </form>
+  </div>
+
+</ng-template>
+

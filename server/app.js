@@ -20,14 +20,7 @@ app.use(express.static(path.join(__dirname, '../dist/nodebucket')));
 app.use('/', express.static(path.join(__dirname, '../dist/nodebucket')));
 app.use(cors());
 
-app.get("*.*",express.static('../dist/nodebucket',{
-  maxAge: "1y"
-}));
 
-app.get("/",function(req,res){
-res.status(200).sendFile(`/`,{root:'../dist/nodebucket'});
-
-});
 /**
  * Variables
  */

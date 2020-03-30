@@ -24,7 +24,7 @@ app.use(cors());
 /**
  * Variables
  */
-const port = 3000 || process.env.PORT; // server port
+const port = process.env.PORT || 3000; // server port
 
 // TODO: This line will need to be replaced with your actual database connection string
 // const conn = 'mongodb://localhost:27017/nodebucket?retryWrites=true&w=majority';//local datastring

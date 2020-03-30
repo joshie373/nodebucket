@@ -18,7 +18,7 @@ export class ReportsComponent implements OnInit {
   
 
   //used to connect to node server to run api calls
-  baseUri:string = 'http://localhost:3000/api';
+  baseUri:string = '../api';
 
   //sets header values for http request
   headers = new HttpHeaders().set('Content-Type', 'application/json');
@@ -61,6 +61,7 @@ export class ReportsComponent implements OnInit {
   //HTTP request to get all employees
   FindAllEmployeesHttp(): Observable<any> {
     let url = `${this.baseUri}/employees/`;
+    console.log(url);
     return this.http.get(url, {headers: this.headers});
   }
 

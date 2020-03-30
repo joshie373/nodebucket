@@ -124,8 +124,8 @@ export class TasksComponent implements OnInit {
 
   //---end modal elements---- 
 
-  //used to connect to node server to run api calls
-  baseUri:string = 'http://localhost:3000/api';
+ //used to connect to node server to run api calls
+ baseUri:string = '../api';
 
   //sets header values for http request
   headers = new HttpHeaders().set('Content-Type', 'application/json');

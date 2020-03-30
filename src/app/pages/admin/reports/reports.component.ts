@@ -64,7 +64,7 @@ export class ReportsComponent implements OnInit {
     return this.http.get(url, {headers: this.headers});
   }
 
-  //function to reurn true if date is today
+  //function to return true if date is today
   isToday(someDate){
     let today = new Date();
     let checkDate = new Date(someDate);

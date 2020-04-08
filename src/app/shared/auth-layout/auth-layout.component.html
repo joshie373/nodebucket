@@ -16,7 +16,7 @@
           <input formControlName="empId" [(ngModel)]="EmployeeId" matInput placeholder="Employee Id">
         </mat-form-field>
         <div style="color:red" *ngIf="LoginClicked && myForm.empId.errors?.required">
-          Employee Id is required.
+          Employee Id is required!.
         </div>
         <div style="color:red" *ngIf="LoginClicked && LoginError">
           {{LoginError}}
